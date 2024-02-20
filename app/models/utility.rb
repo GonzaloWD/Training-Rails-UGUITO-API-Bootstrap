@@ -23,7 +23,6 @@ class Utility < ApplicationRecord
   JSON_ATTRIBUTES = %i[integration_urls].freeze
 
   has_many :users, dependent: :destroy
-  has_many :notes, through: :users
 
   validates :name, uniqueness: true
   validates :name, :type, presence: true
