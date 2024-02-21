@@ -16,4 +16,8 @@ class Note < ApplicationRecord
 
   belongs_to :user
   has_one :utility, through: :user
+
+  def word_count
+    content.scan(/\p{alpha}+|\d+(?:\.\d+)*/).length
+  end
 end
