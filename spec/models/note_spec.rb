@@ -38,4 +38,78 @@ RSpec.describe Note, type: :model do
       expect(subject.word_count).to eq(0)
     end
   end
+
+  describe '#content_length with north utility' do
+    before do
+      subject.utility = NorthUtility.new
+    end
+
+    it 'returns short for content words count equal or less than 50' do
+      subject.content = 'rep ' * 50
+      expect(subject.content_length).to eq('short')
+    end
+
+    it 'returns medium for content words count  equal or less than 100' do
+      subject.content = 'rep ' * 100
+      expect(subject.content_length).to eq('medium')
+    end
+
+    it 'returns long for content words count greater than 100' do
+      subject.content = 'rep ' * 120
+      expect(subject.content_length).to eq('long')
+    end
+  end
+
+  describe '#content_length with south utility' do
+    before do
+      subject.utility = SouthUtility.new
+    end
+
+    it 'returns short for content words count equal or less than 50' do
+      subject.content = 'rep ' * 60
+      expect(subject.content_length).to eq('short')
+    end
+
+    it 'returns medium for content words count  equal or less than 100' do
+      subject.content = 'rep ' * 120
+      expect(subject.content_length).to eq('medium')
+    end
+
+    it 'returns long for content words count greater than 100' do
+      subject.content = 'rep ' * 130
+      expect(subject.content_length).to eq('long')
+    end
+  end
+
+  describe '#valid_content_count? for type review' do
+    subject(:note_type_review) do
+      FactoryBot.create(:note, :review)
+    end
+
+    it 'returns false if review word_count greater than 60' do
+      subject.content = subject.content = 'rep ' * 70
+      expect(subject.valid_content_count?).to eq(false)
+    end
+
+    it 'returns true if review word_count equal or less than 60' do
+      subject.content = subject.content = 'rep ' * 40
+      expect(subject.valid_content_count?).to eq(true)
+    end
+  end
+
+  describe '#valid_content_count? for type critique' do
+    subject(:note_type_critique) do
+      FactoryBot.create(:note, :critique)
+    end
+
+    it 'returns true if critique word_count greater than 60' do
+      subject.content = subject.content = 'rep ' * 70
+      expect(subject.valid_content_count?).to eq(true)
+    end
+
+    it 'returns true if review word_count equal or less 60' do
+      subject.content = subject.content = 'rep ' * 40
+      expect(subject.valid_content_count?).to eq(true)
+    end
+  end
 end
