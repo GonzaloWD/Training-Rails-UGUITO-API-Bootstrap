@@ -30,7 +30,7 @@ class Note < ApplicationRecord
   end
 
   def review_must_be_short
-    errors.add(:base, 'review incorrecta') unless valid_content_count?
+    errors.add(:base, I18n.t('note.review_must_be_short')) unless valid_content_count?
   end
 
   def valid_content_count?
