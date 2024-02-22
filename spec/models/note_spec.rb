@@ -40,9 +40,10 @@ RSpec.describe Note, type: :model do
   end
 
   describe '#content_length with north utility' do
-    before do
-      subject.utility = NorthUtility.new
-    end
+    subject(:note) { create(:note, user: user) }
+
+    let(:north_utility) { create(:north_utility, code: 1) }
+    let(:user) { create(:user, utility: north_utility) }
 
     it 'returns short for content words count equal or less than 50' do
       subject.content = 'rep ' * 50
@@ -61,9 +62,10 @@ RSpec.describe Note, type: :model do
   end
 
   describe '#content_length with south utility' do
-    before do
-      subject.utility = SouthUtility.new
-    end
+    subject(:note) { create(:note, user: user) }
+
+    let(:south_utility) { create(:south_utility, code: 2) }
+    let(:user) { create(:user, utility: south_utility) }
 
     it 'returns short for content words count equal or less than 50' do
       subject.content = 'rep ' * 60

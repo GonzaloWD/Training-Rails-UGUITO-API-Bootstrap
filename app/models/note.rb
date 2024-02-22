@@ -13,7 +13,7 @@
 class Note < ApplicationRecord
   enum note_type: { review: 0, critique: 1 }
   validates :title, :content, :note_type, :user_id, presence: true
-  validate :review_must_be_short, on: :create
+  validate :review_must_be_short
 
   belongs_to :user
   has_one :utility, through: :user
@@ -30,10 +30,11 @@ class Note < ApplicationRecord
   end
 
   def review_must_be_short
-    errors.add(:base, I18n.t('note.review_must_be_short')) unless valid_content_count?
+    errors.add(:content, I18n.t('note.review_must_be_short')) unless valid_content_count?
   end
 
   def valid_content_count?
-    note_type == 'critique' || (note_type == 'review' && word_count <= utility.short_content)
+    content.nil? ||
+      (note_type != 'review' || word_count <= (utility&.short_content || 50))
   end
 end

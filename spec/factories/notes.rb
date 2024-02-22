@@ -12,7 +12,7 @@ FactoryBot.define do
 
     trait :critique do
       note_type { Note.note_types.values[1] }
-      content { Faker::Lorem.sentence(word_count: rand(20..100)) }
+      content { Faker::Lorem.sentence(word_count: rand(20..150)) }
     end
   end
 end
