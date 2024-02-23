@@ -21,8 +21,9 @@ Rails.application.routes.draw do
     resource :users do
       get :current
     end
+    resources :notes, only: %i[index show] 
   end
-
+  
   get '/async_request/jobs/:id', to: 'async_request/jobs#show'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
