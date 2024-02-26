@@ -34,6 +34,6 @@ class Note < ApplicationRecord
   end
 
   def valid_content_count?
-    note_type != 'review' || word_count <= utility.short_content_length
+    utility.nil? || note_type != 'review' || word_count <= utility.short_content_length
   end
 end
