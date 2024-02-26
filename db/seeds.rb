@@ -35,7 +35,3 @@ User.all.find_each do |user|
   random_notes_type = [:review, :critique].sample
   FactoryBot.create(:note, random_notes_type, user: user)
 end
-
-
-
-
