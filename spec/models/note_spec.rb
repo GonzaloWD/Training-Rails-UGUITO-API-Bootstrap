@@ -5,7 +5,7 @@ RSpec.describe Note, type: :model do
     create(:note)
   end
 
-  %i[user_id note_type content title].each do |value|
+  %i[note_type content title].each do |value|
     it { is_expected.to validate_presence_of(value) }
   end
 

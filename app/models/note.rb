@@ -12,14 +12,14 @@
 #
 class Note < ApplicationRecord
   enum note_type: { review: 0, critique: 1 }
-  validates :title, :content, :note_type, :user_id, presence: true
+  validates :title, :content, :note_type, presence: true
   validate :validate_content_length
 
   belongs_to :user
   has_one :utility, through: :user
 
   def word_count
-    content.scan(/\p{alpha}+|\d+(?:\.\d+)*/).length
+    content&.scan(/\p{alpha}+|\d+(?:\.\d+)*/)&.length || 0
   end
 
   def content_length
@@ -34,7 +34,6 @@ class Note < ApplicationRecord
   end
 
   def valid_content_count?
-    content.nil? ||
-      (note_type != 'review' || word_count <= (utility&.short_content_length || 50))
+    note_type != 'review' || word_count <= utility.short_content_length
   end
 end
