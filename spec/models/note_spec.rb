@@ -5,11 +5,12 @@ RSpec.describe Note, type: :model do
     create(:note)
   end
 
+  let(:north_utility) { create(:north_utility, code: 1) }
+  let(:south_utility) { create(:south_utility, code: 2) }
+
   %i[note_type content title].each do |value|
     it { is_expected.to validate_presence_of(value) }
   end
-
-  it { is_expected.to belong_to(:user) }
 
   it { is_expected.to have_one(:utility).through(:user) }
 
@@ -49,99 +50,79 @@ RSpec.describe Note, type: :model do
 
   describe '#content_length' do
     context 'with north utility' do
-      subject(:note) { create(:note, user: user) }
+      subject(:note) { create(:note, user: user, content: content, note_type: :critique) }
 
-      let(:north_utility) { create(:north_utility, code: 1) }
       let(:user) { create(:user, utility: north_utility) }
 
       context 'with words count equal or less than 50' do
+        let(:content) { 'rep ' * 50 }
+
         it 'returns short' do
-          subject.content = 'rep ' * 50
           expect(subject.content_length).to eq('short')
         end
       end
 
       context 'with content words count equal or less than 100' do
+        let(:content) { 'rep ' * 100 }
+
         it 'returns medium' do
-          subject.content = 'rep ' * 100
           expect(subject.content_length).to eq('medium')
         end
       end
 
       context 'with content words count greater than 100' do
+        let(:content) { 'rep ' * 120 }
+
         it 'returns long' do
-          subject.content = 'rep ' * 120
           expect(subject.content_length).to eq('long')
         end
       end
     end
 
     context 'with south utility' do
-      subject(:note) { create(:note, user: user) }
+      subject(:note) { create(:note, user: user, content: content, note_type: :critique) }
 
-      let(:south_utility) { create(:south_utility, code: 2) }
       let(:user) { create(:user, utility: south_utility) }
 
       context 'with words count equal or less than 60' do
+        let(:content) { 'rep ' * 60 }
+
         it 'returns short' do
-          subject.content = 'rep ' * 60
           expect(subject.content_length).to eq('short')
         end
       end
 
       context 'with content words count equal or less than 120' do
+        let(:content) { 'rep ' * 120 }
+
         it 'returns medium' do
-          subject.content = 'rep ' * 120
           expect(subject.content_length).to eq('medium')
         end
       end
 
       context 'with content words count greater than 120' do
+        let(:content) { 'rep ' * 130 }
+
         it 'returns long' do
-          subject.content = 'rep ' * 130
           expect(subject.content_length).to eq('long')
         end
       end
     end
   end
 
-  describe '#valid_content_count?' do
+  describe '#save!' do
     context 'with type review' do
       subject(:note_type_review) do
-        FactoryBot.create(:note, :review)
+        FactoryBot.build(:note, :review, user: user, content: content)
       end
+
+      let(:user) { create(:user, utility: south_utility) }
 
       context 'when review word_count greater than 60' do
+        let(:content) { 'rep ' * 70 }
+
         it 'returns false' do
-          subject.content = subject.content = 'rep ' * 70
-          expect(subject.valid_content_count?).to eq(false)
-        end
-      end
-
-      context 'when review word_count equal or less than 60' do
-        it 'returns true' do
-          subject.content = subject.content = 'rep ' * 40
-          expect(subject.valid_content_count?).to eq(true)
-        end
-      end
-    end
-
-    context 'with type critique' do
-      subject(:note_type_critique) do
-        FactoryBot.create(:note, :critique)
-      end
-
-      context 'when critique word_count greater than 60' do
-        it 'returns true' do
-          subject.content = subject.content = 'rep ' * 70
-          expect(subject.valid_content_count?).to eq(true)
-        end
-      end
-
-      context 'when review word_count equal or less 60' do
-        it 'returns true' do
-          subject.content = subject.content = 'rep ' * 40
-          expect(subject.valid_content_count?).to eq(true)
+          expect { subject.save! }.to raise_error(ActiveRecord::RecordInvalid)
         end
       end
     end

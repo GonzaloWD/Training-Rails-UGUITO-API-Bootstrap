@@ -29,11 +29,13 @@ class Note < ApplicationRecord
     'long'
   end
 
+  private
+
   def validate_content_length
     errors.add(:content, I18n.t('note.validate_content_length')) unless valid_content_count?
   end
 
   def valid_content_count?
-    utility.nil? || note_type != 'review' || word_count <= utility.short_content_length
+    note_type != 'review' || word_count <= utility.short_content_length
   end
 end
