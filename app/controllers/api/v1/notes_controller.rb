@@ -14,7 +14,6 @@ module Api
       end
 
       def notes_filtered
-        params[:note_type] = nil unless valid_type_param
         order, page, page_size = params.values_at(:order, :page, :page_size)
         order ||= :asc
         Note.all.where(filtering_params).order(created_at: order).page(page).per(page_size)
