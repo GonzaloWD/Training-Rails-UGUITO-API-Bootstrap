@@ -2,7 +2,11 @@ module Api
   module V1
     class NotesController < ApplicationController
       def index
-        render json: notes_filtered, status: :ok, each_serializer: IndexNoteSerializer
+        if valid_type_param
+          render json: notes_filtered, status: :ok, each_serializer: IndexNoteSerializer
+        else
+          render json: { error: I18n.t('note.type_not_allowed') }, status: :not_acceptable
+        end
       end
 
       def show

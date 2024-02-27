@@ -40,7 +40,7 @@ describe Api::V1::NotesController, type: :controller do
         end
       end
 
-      context 'when fetching notes using filter note_type with value review' do
+      context 'when fetching notes using filter note_type with valid type' do
         let(:note_type) { 'review' }
 
         let!(:notes_custom) { create_list(:note, 2, note_type: :review) }
@@ -57,19 +57,15 @@ describe Api::V1::NotesController, type: :controller do
         end
       end
 
-      context 'when fetching note using invalid value for filter note_type' do
+      context 'when fetching note using invalid type for filter note_type' do
         let(:note_type) { 'something_else' }
 
         let(:notes_expected) { [] }
 
         before { get :index, params: { note_type: note_type } }
 
-        it 'responds with empty notes' do
-          expect(response_body.to_json).to eq(expected)
-        end
-
-        it 'responds with 200 status' do
-          expect(response).to have_http_status(:ok)
+        it 'responds with 406 status' do
+          expect(response).to have_http_status(:not_acceptable)
         end
       end
     end
