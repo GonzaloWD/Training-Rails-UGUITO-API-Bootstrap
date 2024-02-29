@@ -2,36 +2,38 @@ module Api
   module V1
     class NotesController < ApplicationController
       def index
-        if valid_type_param
-          render json: notes_filtered, status: :ok, each_serializer: IndexNoteSerializer
-        else
-          render json: { error: I18n.t('note.type_not_allowed') }, status: :not_acceptable
+        unless valid_type_param?
+          return render json: { error: I18n.t('note.type_not_allowed') }, status: :not_acceptable
         end
+        render json: notes, status: :ok, each_serializer: NoteSerializer
       end
 
       def show
-        render json: show_note, status: :ok, serializer: ShowNoteSerializer
+        render json: note, status: :ok, serializer: NoteDetailSerializer
       end
 
-      def notes_filtered
-        order, page, page_size = params.values_at(:order, :page, :page_size)
-        order ||= :asc
-        Note.all.where(filtering_params).order(created_at: order).page(page).per(page_size)
+      def notes
+        Note.where(filtering_params).order(created_at: params[:order] || :asc)
+            .page(params[:page])
+            .per(params[:page_size])
       end
 
       def filtering_params
         params.permit(%i[note_type])
       end
 
-      def show_note
+      def note
         Note.find(params.require(:id))
       end
 
       private
 
-      def valid_type_param
-        type = params[:note_type]
-        Note.note_types.keys.include?(type) || type.nil?
+      def valid_type_param?
+        type.nil? || Note.note_types.keys.include?(type)
+      end
+
+      def type
+        params[:note_type]
       end
     end
   end

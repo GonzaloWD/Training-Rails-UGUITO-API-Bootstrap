@@ -7,7 +7,7 @@ describe Api::V1::NotesController, type: :controller do
     context 'without need of loggin' do
       let!(:expected) do
         ActiveModel::Serializer::CollectionSerializer.new(notes_expected,
-                                                          serializer: IndexNoteSerializer).to_json
+                                                          serializer: NoteSerializer).to_json
       end
 
       context 'when fetching all the notes' do
@@ -73,7 +73,7 @@ describe Api::V1::NotesController, type: :controller do
 
   describe 'GET #show' do
     context 'without need of loggin' do
-      let(:expected) { ShowNoteSerializer.new(note, root: false).to_json }
+      let(:expected) { NoteDetailSerializer.new(note, root: false).to_json }
 
       context 'when fetching a valid note' do
         let(:note) { create(:note) }
