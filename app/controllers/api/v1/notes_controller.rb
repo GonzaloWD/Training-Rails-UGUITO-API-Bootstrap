@@ -2,9 +2,7 @@ module Api
   module V1
     class NotesController < ApplicationController
       def index
-        unless valid_type_param?
-          return render json: { error: I18n.t('note.type_not_allowed') }, status: :not_acceptable
-        end
+        return render_type_error unless valid_type_param?
         render json: notes, status: :ok, each_serializer: NoteSerializer
       end
 
@@ -13,9 +11,7 @@ module Api
       end
 
       def notes
-        Note.where(filtering_params).order(created_at: params[:order] || :asc)
-            .page(params[:page])
-            .per(params[:page_size])
+        Note.with_type_page_order(filtering_params, order, params[:page], params[:page_size])
       end
 
       def filtering_params
@@ -34,6 +30,14 @@ module Api
 
       def type
         params[:note_type]
+      end
+
+      def order
+        params[:order] || :asc
+      end
+
+      def render_type_error
+        render json: { error: I18n.t('note.type_not_allowed') }, status: :unprocessable_entity
       end
     end
   end

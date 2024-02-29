@@ -18,6 +18,12 @@ class Note < ApplicationRecord
   belongs_to :user
   has_one :utility, through: :user
 
+  scope :with_type_page_order, lambda { |filtering_params, order, page, page_size|
+                                 where(filtering_params).order(created_at: order)
+                                                        .page(page)
+                                                        .per(page_size)
+                               }
+
   def word_count
     content.scan(/\p{alpha}+|\d+(?:\.\d+)*/).length
   end
