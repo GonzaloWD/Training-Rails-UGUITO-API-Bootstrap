@@ -75,15 +75,23 @@ RSpec.describe Note, type: :model do
   describe '#save!' do
     context 'with type review' do
       subject(:note_type_review) do
-        FactoryBot.build(:note, :review, user: user, content: content)
+        build(:note, :review, user: user, content: content)
       end
 
       let(:user) { create(:user, utility: south_utility) }
 
-      context 'when review word_count greater than 60' do
+      context 'when has valid content length' do
+        let(:content) { 'rep ' * 30 }
+
+        it 'create note succesfully' do
+          expect(subject.save!).to be_truthy
+        end
+      end
+
+      context 'when has invalid content length' do
         let(:content) { 'rep ' * 70 }
 
-        it 'returns false' do
+        it 'returns ActiveRecord::RecordInvalid' do
           expect { subject.save! }.to raise_error(ActiveRecord::RecordInvalid)
         end
       end
