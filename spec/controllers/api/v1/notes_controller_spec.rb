@@ -5,10 +5,11 @@ describe Api::V1::NotesController, type: :controller do
     let!(:note_size) { Faker::Number.between(from: 3, to: 6) }
     let!(:expected_note_keys) { %w[id title note_type content_length] }
 
-    before { create_list(:note, note_size, :critique) }
+    context 'when there is a user logged in' do
+      include_context 'with authenticated user'
+      before { create_list(:note, note_size, :critique, user: user) }
 
-    context 'without need of loggin' do
-      context 'when fetching all the notes' do
+      context 'when fetching all the notes for user' do
         before { get :index }
 
         it 'responds with the expected note count' do
@@ -46,7 +47,7 @@ describe Api::V1::NotesController, type: :controller do
       context 'when fetching notes using filter note_type with valid type' do
         let(:note_type) { 'review' }
 
-        let!(:review_notes) { create_list(:note, 2, note_type: :review) }
+        let!(:review_notes) { create_list(:note, 2, note_type: :review, user: user) }
 
         before { get :index, params: { note_type: note_type } }
 
@@ -73,14 +74,24 @@ describe Api::V1::NotesController, type: :controller do
         end
       end
     end
+
+    context 'when there is not a user logged in' do
+      context 'when fetching all the notes for user' do
+        before { get :index }
+
+        it_behaves_like 'unauthorized'
+      end
+    end
   end
 
   describe 'GET #show' do
-    context 'without need of loggin' do
+    context 'when there is a user logged in' do
       let!(:expected_note_keys) { %w[id title note_type word_count created_at content content_length user] }
 
+      include_context 'with authenticated user'
+
       context 'when fetching a valid note' do
-        let(:note) { create(:note) }
+        let(:note) { create(:note, user: user) }
 
         before { get :show, params: { id: note.id } }
 
@@ -99,6 +110,14 @@ describe Api::V1::NotesController, type: :controller do
         it 'responds with 404 status' do
           expect(response).to have_http_status(:not_found)
         end
+      end
+    end
+
+    context 'when there is not a user logged in' do
+      context 'when fetching all the notes for user' do
+        before { get :index }
+
+        it_behaves_like 'unauthorized'
       end
     end
   end
