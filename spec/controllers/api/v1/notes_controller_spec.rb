@@ -5,6 +5,8 @@ describe Api::V1::NotesController, type: :controller do
     let!(:note_size) { Faker::Number.between(from: 3, to: 6) }
     let!(:expected_note_keys) { %w[id title note_type content_length] }
 
+    before { create_list(:note, 5) }
+
     context 'when there is a user logged in' do
       include_context 'with authenticated user'
       before { create_list(:note, note_size, :critique, user: user) }
