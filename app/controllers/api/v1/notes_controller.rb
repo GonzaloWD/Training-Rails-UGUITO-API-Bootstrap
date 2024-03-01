@@ -65,15 +65,15 @@ module Api
       end
 
       def render_invalid_content_length_error
-        render json: { "message": I18n.t('note.validate_content_length') }, status: :bad_request
+        render json: { error: I18n.t('note.validate_content_length') }, status: :bad_request
       end
 
       def render_missing_params_error
-        render json: { "message": I18n.t('note.missing_params') }, status: :bad_request
+        render json: { error: I18n.t('note.missing_params') }, status: :bad_request
       end
 
       def render_invalid_c__error
-        render json: { "message": I18n.t('note.validate_content_length') }, status: :unprocessable_entity
+        render json: { error: I18n.t('note.validate_content_length') }, status: :unprocessable_entity
       end
 
       def render_type_error

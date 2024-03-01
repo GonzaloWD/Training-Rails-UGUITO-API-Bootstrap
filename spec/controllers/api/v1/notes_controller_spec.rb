@@ -116,8 +116,37 @@ describe Api::V1::NotesController, type: :controller do
     end
 
     context 'when there is not a user logged in' do
-      context 'when fetching all the notes for user' do
-        before { get :index }
+      context 'when fetching note' do
+        before { get :show, params: { id: Faker::Number.number } }
+
+        it_behaves_like 'unauthorized'
+      end
+    end
+  end
+
+  describe 'POST #create' do
+    let(:title) { Faker::Lorem.word }
+    let(:note_type) { :review }
+    let(:content) { Faker::Lorem.sentence(word_count: rand(20..50)) }
+
+    context 'when there is a user logged in' do
+      include_context 'with authenticated user'
+
+      context 'when creating a valid note' do
+        let(:params) { { note: { title: title, note_type: note_type, content: content } } }
+
+        before { post :create, params: params }
+
+        it 'responds with 201 status' do
+          byebug
+          expect(response).to have_http_status :created
+        end
+      end
+    end
+
+    context 'when there is not a user logged in' do
+      context 'when creation note' do
+        before { post :create }
 
         it_behaves_like 'unauthorized'
       end
