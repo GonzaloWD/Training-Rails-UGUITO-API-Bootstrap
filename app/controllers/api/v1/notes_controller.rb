@@ -4,8 +4,6 @@ module Api
       before_action :authenticate_user!
 
       rescue_from ActiveRecord::RecordInvalid, with: :handle_record_invalid
-      rescue_from ArgumentError, with: :handle_invalid_type
-      rescue_from ActiveRecord::StatementInvalid, with: :handle_invalid_type
 
       def index
         return render_type_error unless valid_type_param?
@@ -17,7 +15,8 @@ module Api
       end
 
       def create
-        raise ActiveRecord::RecordInvalid unless containt_all_note_params?
+        return render_missing_params_error unless containt_all_note_params?
+        return render_type_error unless valid_type_param?
         notes.create! note_params
         render json: { "message": I18n.t('note.created_successfully') }, status: :created
       end
@@ -62,12 +61,19 @@ module Api
       end
 
       def handle_record_invalid
-        if !containt_all_note_params?
-          render json: { "message": I18n.t('note.missing_params') }, status: :bad_request
-        else
-          render json: { "message": I18n.t('note.review_must_be_short') },
-                 status: :unprocessable_entity
-        end
+        render_invalid_content_length_error
+      end
+
+      def render_invalid_content_length_error
+        render json: { "message": I18n.t('note.validate_content_length') }, status: :bad_request
+      end
+
+      def render_missing_params_error
+        render json: { "message": I18n.t('note.missing_params') }, status: :bad_request
+      end
+
+      def render_invalid_c__error
+        render json: { "message": I18n.t('note.validate_content_length') }, status: :unprocessable_entity
       end
 
       def render_type_error
