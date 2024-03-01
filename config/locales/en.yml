@@ -34,3 +34,6 @@ en:
   note:
     validate_content_length: "note_type is invalid. The content attribute exceeds the limit of words allowed for review type notes"
     type_not_allowed: "note_type is not allowed. Only permitted review and critique type"
+    created_successfully: "Note created successfully."
+    missing_params: "Required parameters are missing."
+
