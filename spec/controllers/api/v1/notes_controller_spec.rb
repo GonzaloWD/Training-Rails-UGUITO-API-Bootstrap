@@ -116,8 +116,8 @@ describe Api::V1::NotesController, type: :controller do
     end
 
     context 'when there is not a user logged in' do
-      context 'when fetching all the notes for user' do
-        before { get :index }
+      context 'when fetching note' do
+        before { get :show, params: { id: Faker::Number.number } }
 
         it_behaves_like 'unauthorized'
       end
