@@ -27,18 +27,13 @@ FactoryBot.create(:user, utility: south_utility, email: 'test_south@widergy.com'
 
 FactoryBot.create(:user, utility: north_utility, email: 'test_north@widergy.com',
                          password: '12345678', password_confirmation: '12345678')
-users = User.all
-users.find_each do |user|
+
+User.all.find_each do |user|
   random_books_amount = [1, 2, 3].sample
   FactoryBot.create_list(:book, random_books_amount, user: user, utility: user.utility)
+  
+  random_notes_type = Note.note_types.keys.sample
+  FactoryBot.create(:note, random_notes_type, user: user)
 end
 
-# Notes
-users.find_each.with_index do |user, index|
-  if(index < users.length / 2)
-    FactoryBot.create(:note, :review, user: user)
-  else
-    FactoryBot.create(:note, :critique, user: user)  
-  end
-end
 

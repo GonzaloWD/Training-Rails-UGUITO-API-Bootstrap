@@ -32,5 +32,6 @@
 en:
   hello: "Hello world"
   note:
-    review_must_be_short: "note_type is invalid. The content attribute exceeds the limit of words allowed for review type notes"
-    type_not_allowed: "note_type is not allowed. Only permitted review and critique type"
+    type_not_allowed: "note_type is not allowed. Only permitted review and critique type"    
+    validate_content_length: "note_type is invalid. The content attribute exceeds the limit of words allowed for review type notes"
+
