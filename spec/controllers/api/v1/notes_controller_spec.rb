@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe Api::V1::NotesController, type: :controller do
   describe 'GET #index' do
-    let!(:note_size) { Faker::Number.between(from: 3, to: 6) }
-    let!(:expected_note_keys) { %w[id title note_type content_length] }
+    let(:note_size) { Faker::Number.between(from: 3, to: 6) }
+    let(:expected_note_keys) { %w[id title note_type content_length] }
 
     before { create_list(:note, 5) }
 
