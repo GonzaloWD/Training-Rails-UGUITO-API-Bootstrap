@@ -185,14 +185,14 @@ describe Api::V1::NotesController, type: :controller do
       end
 
       context 'when creating a note with invalid content length' do
-        let(:note_type) { 'wrong_type' }
+        let(:note_type) { :review }
         let(:content) { 'rep ' * 80 }
 
         it 'responds with 422 status' do
           expect(response).to have_http_status :unprocessable_entity
         end
 
-        it 'render note created message' do
+        it 'render note invalid content length' do
           expect(response_body['error']).to eq I18n.t('note.validate_content_length')
         end
       end
