@@ -107,9 +107,10 @@ describe Api::V1::NotesController, type: :controller do
       end
 
       context 'when fetching another user note' do
-        let(:another_user_notes) { create(:note) }
+        let(:another_user) { create(:user) }
+        let(:note) { create(:note, user: another_user) }
 
-        before { get :show, params: { id: another_user_notes.id } }
+        before { get :show, params: { id: note.id } }
 
         it 'responds with 404 status' do
           expect(response).to have_http_status(:not_found)
