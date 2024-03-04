@@ -183,6 +183,19 @@ describe Api::V1::NotesController, type: :controller do
           expect(response_body['error']).to eq I18n.t('note.type_not_allowed')
         end
       end
+
+      context 'when creating a note with invalid content length' do
+        let(:note_type) { 'wrong_type' }
+        let(:content) { 'rep ' * 80 }
+
+        it 'responds with 422 status' do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+
+        it 'render note created message' do
+          expect(response_body['error']).to eq I18n.t('note.validate_content_length')
+        end
+      end
     end
 
     context 'when there is not a user logged in' do
