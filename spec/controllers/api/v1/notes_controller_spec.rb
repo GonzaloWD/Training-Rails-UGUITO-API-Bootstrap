@@ -132,14 +132,55 @@ describe Api::V1::NotesController, type: :controller do
     context 'when there is a user logged in' do
       include_context 'with authenticated user'
 
+      before { post :create, params: params }
+
+      let(:params) { { note_type: note_type, note: { title: title, note_type: note_type, content: content } } }
+
       context 'when creating a valid note' do
-        let(:params) { { note: { title: title, note_type: note_type, content: content } } }
-
-        before { post :create, params: params }
-
         it 'responds with 201 status' do
-          byebug
           expect(response).to have_http_status :created
+        end
+
+        it 'render note created message' do
+          expect(response_body['message']).to eq I18n.t('note.created_successfully')
+        end
+      end
+
+      context 'when creating a note with missing params' do
+        context 'when missing one param' do
+          let(:title) { nil }
+
+          it 'responds with 400 status' do
+            expect(response).to have_http_status :bad_request
+          end
+
+          it 'render note missing params error' do
+            expect(response_body['error']).to eq I18n.t('note.missing_params')
+          end
+        end
+
+        context 'when missing all params' do
+          let(:params) { { note: {} } }
+
+          it 'responds with 400 status' do
+            expect(response).to have_http_status :bad_request
+          end
+
+          it 'render note missing params error' do
+            expect(response_body['error']).to eq I18n.t('note.missing_params')
+          end
+        end
+      end
+
+      context 'when creating a note with wrong note_type' do
+        let(:note_type) { 'wrong_type' }
+
+        it 'responds with 422 status' do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+
+        it 'render note wrong type error' do
+          expect(response_body['error']).to eq I18n.t('note.type_not_allowed')
         end
       end
     end

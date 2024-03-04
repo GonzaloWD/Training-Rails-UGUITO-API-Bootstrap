@@ -16,9 +16,9 @@ module Api
 
       def create
         return render_missing_params_error unless containt_all_note_params?
-        return render_type_error unless valid_type_param?
+        return render_type_error unless valid_create_type_param?
         notes.create! note_params
-        render json: { "message": I18n.t('note.created_successfully') }, status: :created
+        render_created_note_message
       end
 
       private
@@ -44,6 +44,10 @@ module Api
         type.nil? || Note.note_types.keys.include?(type)
       end
 
+      def valid_create_type_param?
+        Note.note_types.keys.include?(params.dig(:note, :note_type))
+      end
+
       def type
         params[:note_type]
       end
@@ -60,20 +64,20 @@ module Api
         %i[title content note_type].all? { |attr| params.dig(:note, attr).present? }
       end
 
+      def render_created_note_message
+        render json: { message: I18n.t('note.created_successfully') }, status: :created
+      end
+
       def handle_record_invalid
         render_invalid_content_length_error
       end
 
       def render_invalid_content_length_error
-        render json: { error: I18n.t('note.validate_content_length') }, status: :bad_request
+        render json: { error: I18n.t('note.validate_content_length') }, status: :unprocessable_entity
       end
 
       def render_missing_params_error
         render json: { error: I18n.t('note.missing_params') }, status: :bad_request
-      end
-
-      def render_invalid_c__error
-        render json: { error: I18n.t('note.validate_content_length') }, status: :unprocessable_entity
       end
 
       def render_type_error
