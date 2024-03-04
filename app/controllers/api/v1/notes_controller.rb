@@ -20,8 +20,8 @@ module Api
 
       def notes
         current_user_notes.with_type_order(filtering_params, order)
-            .page(params[:page])
-            .per(params[:page_size])
+                          .page(params[:page])
+                          .per(params[:page_size])
       end
 
       def filtering_params
