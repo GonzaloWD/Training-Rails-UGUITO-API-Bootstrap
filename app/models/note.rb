@@ -29,11 +29,9 @@ class Note < ApplicationRecord
     'long'
   end
 
-  scope :with_type_page_order, lambda { |filtering_params, order, page, page_size|
-                                 where(filtering_params).order(created_at: order)
-                                                        .page(page)
-                                                        .per(page_size)
-                               }
+  scope :with_type_order, lambda { |filtering_params, order|
+                            where(filtering_params).order(created_at: order)
+                          }
 
   private
 

@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe Api::V1::NotesController, type: :controller do
   describe 'GET #index' do
-    let!(:note_size) { Faker::Number.between(from: 3, to: 6) }
-    let!(:expected_note_keys) { %w[id title note_type content_length] }
+    let(:note_size) { Faker::Number.between(from: 3, to: 6) }
+    let(:expected_note_keys) { %w[id title note_type content_length] }
 
     before { create_list(:note, 5) }
 
@@ -103,6 +103,17 @@ describe Api::V1::NotesController, type: :controller do
 
         it 'responds with 200 status' do
           expect(response).to have_http_status(:ok)
+        end
+      end
+
+      context 'when fetching another user note' do
+        let(:another_user) { create(:user) }
+        let(:note) { create(:note, user: another_user) }
+
+        before { get :show, params: { id: note.id } }
+
+        it 'responds with 404 status' do
+          expect(response).to have_http_status(:not_found)
         end
       end
 
