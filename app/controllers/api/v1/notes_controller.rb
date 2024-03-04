@@ -1,6 +1,8 @@
 module Api
   module V1
     class NotesController < ApplicationController
+      before_action :authenticate_user!
+
       def index
         return render_type_error unless valid_type_param?
         render json: notes, status: :ok, each_serializer: NoteSerializer
@@ -12,10 +14,14 @@ module Api
 
       private
 
+      def current_user_notes
+        current_user.notes
+      end
+
       def notes
-        Note.with_type_order(filtering_params, order)
-            .page(params[:page])
-            .per(params[:page_size])
+        current_user_notes.with_type_order(filtering_params, order)
+                          .page(params[:page])
+                          .per(params[:page_size])
       end
 
       def filtering_params
@@ -23,7 +29,7 @@ module Api
       end
 
       def note
-        Note.find(params.require(:id))
+        current_user_notes.find(params.require(:id))
       end
 
       def valid_type_param?
