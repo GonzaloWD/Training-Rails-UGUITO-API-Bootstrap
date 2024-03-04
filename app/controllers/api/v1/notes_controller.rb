@@ -10,8 +10,12 @@ module Api
         render json: note, status: :ok, serializer: NoteDetailSerializer
       end
 
+      private
+
       def notes
-        Note.with_type_page_order(filtering_params, order, params[:page], params[:page_size])
+        Note.with_type_order(filtering_params, order)
+            .page(params[:page])
+            .per(params[:page_size])
       end
 
       def filtering_params
@@ -21,8 +25,6 @@ module Api
       def note
         Note.find(params.require(:id))
       end
-
-      private
 
       def valid_type_param?
         type.nil? || Note.note_types.keys.include?(type)
