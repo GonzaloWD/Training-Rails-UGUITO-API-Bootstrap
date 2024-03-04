@@ -29,6 +29,10 @@ class Note < ApplicationRecord
     'long'
   end
 
+  scope :with_type_order, lambda { |filtering_params, order|
+                            where(filtering_params).order(created_at: order)
+                          }
+
   private
 
   def validate_content_length
