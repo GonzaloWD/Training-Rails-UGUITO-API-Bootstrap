@@ -3,7 +3,8 @@ module Api
     class NotesController < ApplicationController
       before_action :authenticate_user!
 
-      rescue_from ActiveRecord::RecordInvalid, with: :handle_record_invalid
+      rescue_from ActiveRecord::RecordInvalid, with: :render_invalid_content_length_error
+      rescue_from ActionController::ParameterMissing, with: :render_missing_params_error
 
       def index
         return render_type_error unless valid_type_param?
@@ -15,9 +16,8 @@ module Api
       end
 
       def create
-        return render_missing_params_error unless containt_all_note_params?
         return render_type_error unless valid_create_type_param?
-        notes.create! note_params
+        Note.create!(note_params.merge(user: current_user))
         render_created_note_message
       end
 
@@ -46,7 +46,7 @@ module Api
       end
 
       def valid_create_type_param?
-        Note.note_types.keys.include?(params.dig(:note, :note_type))
+        Note.note_types.keys.include?(note_params[:note_type])
       end
 
       def type
@@ -58,19 +58,12 @@ module Api
       end
 
       def note_params
+        params.require(:note).require(%i[title note_type content])
         params.require(:note).permit(:title, :note_type, :content)
-      end
-
-      def containt_all_note_params?
-        %i[title content note_type].all? { |attr| params.dig(:note, attr).present? }
       end
 
       def render_created_note_message
         render json: { message: I18n.t('note.created_successfully') }, status: :created
-      end
-
-      def handle_record_invalid
-        render_invalid_content_length_error
       end
 
       def render_invalid_content_length_error
