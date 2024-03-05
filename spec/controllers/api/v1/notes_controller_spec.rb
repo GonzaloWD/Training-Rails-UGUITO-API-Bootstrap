@@ -145,7 +145,7 @@ describe Api::V1::NotesController, type: :controller do
 
       before { post :create, params: params }
 
-      let(:params) { { note_type: note_type, note: { title: title, note_type: note_type, content: content } } }
+      let(:params) { { note: { title: title, note_type: note_type, content: content } } }
 
       context 'when creating a valid note' do
         it 'responds with 201 status' do
@@ -159,7 +159,7 @@ describe Api::V1::NotesController, type: :controller do
 
       context 'when creating a note with missing params' do
         context 'when missing one param' do
-          let(:title) { nil }
+          let(%i[title note_type content].sample ) { nil }
 
           it 'responds with 400 status' do
             expect(response).to have_http_status :bad_request
