@@ -139,6 +139,7 @@ describe Api::V1::NotesController, type: :controller do
     let(:title) { Faker::Lorem.word }
     let(:note_type) { :review }
     let(:content) { Faker::Lorem.sentence(word_count: rand(20..50)) }
+    let(:note_count) { Note.count }
 
     context 'when there is a user logged in' do
       include_context 'with authenticated user'
@@ -155,11 +156,19 @@ describe Api::V1::NotesController, type: :controller do
         it 'render note created message' do
           expect(response_body['message']).to eq I18n.t('note.created_successfully')
         end
+
+        it 'expectated that a record adds' do
+          expect(note_count).to eq(1)
+        end
+
+        it 'expectated that created note belongs to user' do
+          expect(Note.first.user).to eq(user)
+        end
       end
 
       context 'when creating a note with missing params' do
         context 'when missing one param' do
-          let(%i[title note_type content].sample ) { nil }
+          let(%i[title note_type content].sample) { nil }
 
           it 'responds with 400 status' do
             expect(response).to have_http_status :bad_request
@@ -167,6 +176,10 @@ describe Api::V1::NotesController, type: :controller do
 
           it 'render note missing params error' do
             expect(response_body['error']).to eq I18n.t('note.missing_params')
+          end
+
+          it 'expectated that a no record added' do
+            expect(note_count).to eq(0)
           end
         end
 
@@ -179,6 +192,10 @@ describe Api::V1::NotesController, type: :controller do
 
           it 'render note missing params error' do
             expect(response_body['error']).to eq I18n.t('note.missing_params')
+          end
+
+          it 'expectated that a no record added' do
+            expect(note_count).to eq(0)
           end
         end
       end
@@ -193,6 +210,10 @@ describe Api::V1::NotesController, type: :controller do
         it 'render note wrong type error' do
           expect(response_body['error']).to eq I18n.t('note.type_not_allowed')
         end
+
+        it 'expectated that a no record added' do
+          expect(note_count).to eq(0)
+        end
       end
 
       context 'when creating a note with invalid content length' do
@@ -205,6 +226,10 @@ describe Api::V1::NotesController, type: :controller do
 
         it 'render note invalid content length' do
           expect(response_body['error']).to eq I18n.t('note.validate_content_length')
+        end
+
+        it 'expectated that a no record added' do
+          expect(note_count).to eq(0)
         end
       end
     end
