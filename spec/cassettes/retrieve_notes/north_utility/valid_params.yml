@@ -1,0 +1,131 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://private-bfc6a-widergytrainingnorthutilityapi.apiary-mock.com/notas?autor=Rodrigo%20Lugo%20Melgar
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '896'
+      X-Apiary-Ratelimit-Limit:
+      - '120'
+      X-Apiary-Ratelimit-Remaining:
+      - '119'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - OPTIONS,GET,HEAD,POST,PUT,DELETE,TRACE,CONNECT
+      Access-Control-Expose-Headers:
+      - Content-Type
+      Access-Control-Max-Age:
+      - '10'
+      X-Apiary-Transaction-Id:
+      - 64d0ecd7602661007b7a1991
+      Date:
+      - Mon, 07 Aug 2023 13:08:39 GMT
+      Connection:
+      - keep-alive
+      Akamai-Grn:
+      - 0.1295c017.1691413718.1edb8b60
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "notas": [
+            {
+              "id": 1,
+              "titulo": "Opinion personal",
+              "tipo": "opinion",
+              "fecha_creacion": "2022-05-20T14:20:55-03:00",
+              "autor": {
+                "datos_de_contacto": {
+                  "email": "albertogomez@north.com",
+                  "telefono": "11-2233-4455"
+                },
+                "datos_personales": {
+                  "nro_documento": "12345678",
+                  "nombre": "Alberto",
+                  "apellido": "Gomez"
+                }
+              },
+              "libro": {
+                "id": 1,
+                "titulo": "Harry Potter y la piedra filosofal",
+                "autor": "J.K.Rowling",
+                "genero": "fantasia",
+                "imagen_url": "https://some_url.com",
+                "editorial": "Nice Books",
+                "año": "1997"
+              }
+            },
+            {
+              "id": 2,
+              "titulo": "Reseña",
+              "tipo": "resenia",
+              "fecha_creacion": "2022-05-20T14:20:55-03:00",
+              "autor": {
+                "datos_de_contacto": {
+                  "email": "helenamartinez@north.com",
+                  "telefono": "11-2233-4455"
+                },
+                "datos_personales": {
+                  "nro_documento": "12345689",
+                  "nombre": "Helena",
+                  "apellido": "Martinez"
+                }
+              },
+              "libro": {
+                "id": 2,
+                "titulo": "Harry Potter y la cámara secreta",
+                "autor": "J.K.Rowling",
+                "genero": "fantasia",
+                "imagen_url": "https://some_url.com",
+                "editorial": "Nice Books",
+                "año": "1998"
+              }
+            },
+            {
+              "id": 3,
+              "titulo": "Critica",
+              "tipo": "critica",
+              "fecha_creacion": "2022-05-20T14:20:55-03:00",
+              "autor": {
+                "datos_de_contacto": {
+                  "email": "matiaslomonaco@north.com",
+                  "telefono": "11-2233-4455"
+                },
+                "datos_personales": {
+                  "nro_documento": "12345695",
+                  "nombre": "Matias",
+                  "apellido": "Lomonaco"
+                }
+              },
+              "libro": {
+                "id": 3,
+                "titulo": "Animales fantásticos y dónde encontrarlos",
+                "autor": "J.K.Rowling",
+                "genero": "fantasia",
+                "imagen_url": "https://some_url.com",
+                "editorial": "Nice Books",
+                "año": "2001"
+              }
+            }
+          ]
+        }
+  recorded_at: Mon, 07 Aug 2023 13:08:39 GMT
+recorded_with: VCR 6.2.0

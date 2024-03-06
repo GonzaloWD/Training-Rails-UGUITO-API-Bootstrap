@@ -32,9 +32,9 @@ module UtilityService
             note_type: note['tipo'],
             created_at: note['fecha_creacion'],
             user: {
-              email: note["autor"]['datos_de_contacto']['email'],
-              first_name: note["autor"]['datos_personales']['nombre'],
-              last_name: note["autor"]['datos_personales']['apellido']
+              email: note['autor']['datos_de_contacto']['email'],
+              first_name: note['autor']['datos_personales']['nombre'],
+              last_name: note['autor']['datos_personales']['apellido']
             },
             book: {
               title: note['libro']['titulo'],
