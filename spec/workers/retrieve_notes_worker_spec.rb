@@ -13,7 +13,7 @@ describe RetrieveNotesWorker do
     let(:user) { create(:user, utility: utility) }
 
     let(:expected_notes_keys) do
-      %i[title note_type created_at user book]
+      %i[title type created_at user book]
     end
 
     context 'with utility service' do
