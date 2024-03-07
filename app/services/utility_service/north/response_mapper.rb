@@ -29,7 +29,7 @@ module UtilityService
         notes.map do |note|
           {
             title: note['titulo'],
-            type: convert_types(note['tipo']),
+            type: TYPE_STATUSES[note['tipo']],
             created_at: note['fecha_creacion'],
             user: user_details(note),
             book: book_details(note)
@@ -37,9 +37,11 @@ module UtilityService
         end
       end
 
-      def convert_types(type)
-        { resenia: 'review', critica: 'critique' }.fetch(type.to_sym, 'review')
-      end
+      TYPE_STATUSES = {
+        resenia: 'review',
+        critica: 'critique',
+        opinion: 'review'
+      }.freeze
 
       def user_details(note)
         {
