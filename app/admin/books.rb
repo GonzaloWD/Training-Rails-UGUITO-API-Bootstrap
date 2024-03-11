@@ -6,6 +6,8 @@ ActiveAdmin.register Book do
   filter :created_at
   filter :updated_at
 
+  includes :utility, :user
+
   permit_params :title, :publisher, :year, :genre, :author, :image, :user_id, :utility_id
   index do
     selectable_column
