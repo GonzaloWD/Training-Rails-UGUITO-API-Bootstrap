@@ -34,3 +34,6 @@ es:
   note:
     validate_content_length: "note_type no es válido. El atributo de content excede el límite de palabras permitidas para notas de tipo review"
     type_not_allowed: "note_type ingresado no permitido. Solo se admite tipo review y critique."
+    created_successfully: "Nota creada con exito."
+    missing_params: "Faltan parametros requeridos."
+

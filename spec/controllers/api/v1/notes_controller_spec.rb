@@ -134,4 +134,107 @@ describe Api::V1::NotesController, type: :controller do
       end
     end
   end
+
+  describe 'POST #create' do
+    let(:title) { Faker::Lorem.word }
+    let(:note_type) { :review }
+    let(:content) { Faker::Lorem.sentence(word_count: rand(20..50)) }
+
+    context 'when there is a user logged in' do
+      include_context 'with authenticated user'
+
+      before { post :create, params: params }
+
+      let(:params) { { note: { title: title, note_type: note_type, content: content } } }
+
+      context 'when creating a valid note' do
+        it 'responds with 201 status' do
+          expect(response).to have_http_status :created
+        end
+
+        it 'render note created message' do
+          expect(response_body['message']).to eq I18n.t('note.created_successfully')
+        end
+
+        it 'expectated to create a note that belongs to user' do
+          expect { post(:create, params: params) }.to change { user.notes.count }.by(1)
+        end
+      end
+
+      context 'when creating a note with missing params' do
+        context 'when missing one param' do
+          let(%i[title note_type content].sample) { nil }
+
+          it 'responds with 400 status' do
+            expect(response).to have_http_status :bad_request
+          end
+
+          it 'render note missing params error' do
+            expect(response_body['error']).to eq I18n.t('note.missing_params')
+          end
+
+          it 'expectated a note not to be added' do
+            expect { post(:create, params: params) }.not_to change(Note, :count)
+          end
+        end
+
+        context 'when missing all params' do
+          let(:params) { { note: {} } }
+
+          it 'responds with 400 status' do
+            expect(response).to have_http_status :bad_request
+          end
+
+          it 'render note missing params error' do
+            expect(response_body['error']).to eq I18n.t('note.missing_params')
+          end
+
+          it 'expectated a note not to be added' do
+            expect { post(:create, params: params) }.not_to change(Note, :count)
+          end
+        end
+      end
+
+      context 'when creating a note with wrong note_type' do
+        let(:note_type) { 'wrong_type' }
+
+        it 'responds with 422 status' do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+
+        it 'render note wrong type error' do
+          expect(response_body['error']).to eq I18n.t('note.type_not_allowed')
+        end
+
+        it 'expectated a note not to be added' do
+          expect { post(:create, params: params) }.not_to change(Note, :count)
+        end
+      end
+
+      context 'when creating a note with invalid content length' do
+        let(:note_type) { :review }
+        let(:content) { 'rep ' * 80 }
+
+        it 'responds with 422 status' do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+
+        it 'render note invalid content length' do
+          expect(response_body['error']).to eq I18n.t('note.validate_content_length')
+        end
+
+        it 'expectated a note not to be added' do
+          expect { post(:create, params: params) }.not_to change(Note, :count)
+        end
+      end
+    end
+
+    context 'when there is not a user logged in' do
+      context 'when creation note' do
+        before { post :create }
+
+        it_behaves_like 'unauthorized'
+      end
+    end
+  end
 end
