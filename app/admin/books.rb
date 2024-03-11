@@ -3,11 +3,8 @@ ActiveAdmin.register Book do
   filter :genre
   filter :publisher
   filter :year
-  filter :utility
   filter :created_at
   filter :updated_at
-
-  includes :utility, :user
 
   permit_params :title, :publisher, :year, :genre, :author, :image, :user_id, :utility_id
   index do
