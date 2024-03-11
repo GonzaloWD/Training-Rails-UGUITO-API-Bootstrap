@@ -139,7 +139,6 @@ describe Api::V1::NotesController, type: :controller do
     let(:title) { Faker::Lorem.word }
     let(:note_type) { :review }
     let(:content) { Faker::Lorem.sentence(word_count: rand(20..50)) }
-    let(:note_count) { Note.count }
 
     context 'when there is a user logged in' do
       include_context 'with authenticated user'
@@ -157,12 +156,8 @@ describe Api::V1::NotesController, type: :controller do
           expect(response_body['message']).to eq I18n.t('note.created_successfully')
         end
 
-        it 'expectated that a record adds' do
-          expect(note_count).to eq(1)
-        end
-
-        it 'expectated that created note belongs to user' do
-          expect(Note.first.user).to eq(user)
+        it 'expectated to create a note that belongs to user' do
+          expect { post(:create, params: params) }.to change { user.notes.count }.by(1)
         end
       end
 
@@ -178,8 +173,8 @@ describe Api::V1::NotesController, type: :controller do
             expect(response_body['error']).to eq I18n.t('note.missing_params')
           end
 
-          it 'expectated that a no record added' do
-            expect(note_count).to eq(0)
+          it 'expectated a note not to be added' do
+            expect { post(:create, params: params) }.not_to change(Note, :count)
           end
         end
 
@@ -194,8 +189,8 @@ describe Api::V1::NotesController, type: :controller do
             expect(response_body['error']).to eq I18n.t('note.missing_params')
           end
 
-          it 'expectated that a no record added' do
-            expect(note_count).to eq(0)
+          it 'expectated a note not to be added' do
+            expect { post(:create, params: params) }.not_to change(Note, :count)
           end
         end
       end
@@ -211,8 +206,8 @@ describe Api::V1::NotesController, type: :controller do
           expect(response_body['error']).to eq I18n.t('note.type_not_allowed')
         end
 
-        it 'expectated that a no record added' do
-          expect(note_count).to eq(0)
+        it 'expectated a note not to be added' do
+          expect { post(:create, params: params) }.not_to change(Note, :count)
         end
       end
 
@@ -228,8 +223,8 @@ describe Api::V1::NotesController, type: :controller do
           expect(response_body['error']).to eq I18n.t('note.validate_content_length')
         end
 
-        it 'expectated that a no record added' do
-          expect(note_count).to eq(0)
+        it 'expectated a note not to be added' do
+          expect { post(:create, params: params) }.not_to change(Note, :count)
         end
       end
     end

@@ -13,11 +13,8 @@ ActiveAdmin.register Book do
     column :title
     column :author
     column :genre
-    column :utility_id
-    column :user_id
+    column :utility
     column :publisher
-    column :created_at
-    column :updated_at
     actions
   end
 
@@ -30,8 +27,12 @@ ActiveAdmin.register Book do
       f.input :author
       f.input :image
       f.input :image
-      f.input :user_id
-      f.input :utility_id
+      f.input :user_id, label: 'User', as: :select, collection: User.all.map { |user|
+        ["#{user.first_name} #{user.last_name}", user.id]
+      }
+      f.input :utility_id, label: 'Utility', as: :select, collection: Utility.all.map { |utility|
+        [utility.name, utility.id]
+      }
     end
     f.actions
   end

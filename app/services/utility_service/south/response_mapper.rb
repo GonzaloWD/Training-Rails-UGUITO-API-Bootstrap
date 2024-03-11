@@ -29,18 +29,10 @@ module UtilityService
         notes.map do |note|
           {
             title: note['TituloNota'],
-            note_type: note['ReseniaNota'] ? 'review' : 'critique',
+            type: note['ReseniaNota'].to_b ? 'review' : 'critique',
             created_at: note['FechaCreacionNota'],
-            user: {
-              email: note['EmailAutor'],
-              first_name: first_name(note['NombreCompletoAutor']),
-              last_name: last_name(note['NombreCompletoAutor'])
-            },
-            book: {
-              title: note['TituloLibro'],
-              author: note['NombreAutorLibro'],
-              genre: note['GeneroLibro']
-            }
+            user: user_details(note),
+            book: book_details(note)
           }
         end
       end
@@ -51,6 +43,22 @@ module UtilityService
 
       def last_name(full_name)
         full_name.split.second
+      end
+
+      def user_details(note)
+        {
+          email: note['EmailAutor'],
+          first_name: first_name(note['NombreCompletoAutor']),
+          last_name: last_name(note['NombreCompletoAutor'])
+        }
+      end
+
+      def book_details(note)
+        {
+          title: note['TituloLibro'],
+          author: note['NombreAutorLibro'],
+          genre: note['GeneroLibro']
+        }
       end
     end
   end
