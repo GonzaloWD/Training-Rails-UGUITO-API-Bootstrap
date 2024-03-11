@@ -1,0 +1,86 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://private-1971b-widergytrainingsouthutilityapi.apiary-mock.com/Notas?Autor=Rodrigo%20Lugo%20Melgar
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1316'
+      X-Apiary-Ratelimit-Limit:
+      - '120'
+      X-Apiary-Ratelimit-Remaining:
+      - '119'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - OPTIONS,GET,HEAD,POST,PUT,DELETE,TRACE,CONNECT
+      Access-Control-Expose-Headers:
+      - Content-Type
+      Access-Control-Max-Age:
+      - '10'
+      X-Apiary-Transaction-Id:
+      - 65e9dbb0606adc0090fe636a
+      Date:
+      - Thu, 07 Mar 2024 15:22:24 GMT
+      Connection:
+      - keep-alive
+      Akamai-Grn:
+      - 0.39e93b17.1709824943.1809ec45
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+            "Notas": [
+                {
+                    "Id": 1,
+                    "TituloNota": "Reseña",
+                    "ReseniaNota": true,
+                    "FechaCreacionNota": "2022-05-20T14:20:55-03:00",
+                    "EmailAutor": "silvanasuarez@north.com",
+                    "NombreCompletoAutor": "Suarez Silvana",
+                    "TituloLibro": "Harry Potter y la piedra filosofal",
+                    "NombreAutorLibro": "J.K.Rowling",
+                    "GeneroLibro": "fantasia"
+                },
+                {
+                    "Id": 2,
+                    "TituloNota": "Reseña",
+                    "ReseniaNota": true,
+                    "FechaCreacionNota": "2021-03-11T11:23:43-03:00",
+                    "EmailAutor": "roquesigal@north.com",
+                    "NombreCompletoAutor": "Sigal Roque",
+                    "TituloLibro": "Harry Potter y la cámara secreta",
+                    "NombreAutorLibro": "J.K.Rowling",
+                    "GeneroLibro": "fantasia"
+                },
+                {
+                    "Id": 3,
+                    "TituloNota": "Critica",
+                    "ReseniaNota": false,
+                    "FechaCreacionNota": "2023-01-06T08:10:11-03:00",
+                    "EmailAutor": "rociomartinez@north.com",
+                    "NombreCompletoAutor": "Martinez Rocio",
+                    "TituloLibro": "Animales fantásticos y dónde encontrarlos",
+                    "NombreAutorLibro": "J.K.Rowling",
+                    "GeneroLibro": "fantasia"
+                }
+            ]
+        }
+  recorded_at: Thu, 07 Mar 2024 15:22:24 GMT
+recorded_with: VCR 6.2.0
